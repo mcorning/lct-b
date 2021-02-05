@@ -1,15 +1,20 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dense dark>
-      <v-row align="center" justify="end" dense>
-        <!-- <v-col cols="auto">
-          <v-btn width="48" height="48" to="about" color="primary" text></v-btn>
-          <soteria-icon color="purple" />
+      <v-row align="center" justify="start" dense>
+        <v-col>
+          <v-btn width="48" height="48" to="about" color="primary" text>
+            <soteria-icon color="purple" />
+          </v-btn>
+          <a
+            class="white--text"
+            href="https://soteriainstitute.org/safe-in-sisters/"
+            target="_blank"
+            style="text-decoration: none;"
+            >Soteria Institute</a
+          >
         </v-col>
-        <v-col cols="auto">
-          <v-img contain src="/public/img/icons/Soteria_ID_120x120.jpg" />
-        </v-col> -->
-        <v-col cols="auto">
+        <!-- <v-col cols="auto">
           <v-img
             alt="Enduring Net Logo"
             class="shrink "
@@ -18,7 +23,7 @@
             max-height="36"
             max-width="75"
           />
-        </v-col>
+        </v-col> -->
 
         <v-spacer></v-spacer>
 
