@@ -5,7 +5,6 @@
     </v-overlay>
 
     <diaryCard />
-
     <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
     <v-snackbar
       v-model="snackBar"
@@ -53,7 +52,7 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <!-- <v-row>
         <v-col>
           <roomCard
             ref="roomSelect"
@@ -62,6 +61,13 @@
             @changeRoom="onChangeRoom($event)"
             @act="onAct($event)"
         /></v-col>
+      </v-row> -->
+      <v-row>
+        <v-col>
+          <!-- LCT-B does not interact with Rooms on the node Server.  -->
+          <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
+          <roomCard2 ref="roomSelect" />
+        </v-col>
       </v-row>
 
       <v-expansion-panels
@@ -106,7 +112,8 @@ import Visitor from "@/models/Visitor";
 
 import diaryCard from "@/components/cards/diaryCard";
 import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
-import roomCard from "@/components/cards/roomCard";
+// import roomCard from "@/components/cards/roomCard";
+import roomCard2 from "@/components/cards/roomCard2";
 // import roomIdentityCard from '@/components/cards/roomIdentityCard';
 // import roomEntryCard from '@/components/cards/roomEntryCard';
 import dataTableCard from "@/components/cards/dataTableCard";
@@ -135,7 +142,8 @@ export default {
     visitorIdentityCard,
     // roomIdentityCard,
     // roomEntryCard,
-    roomCard,
+    // roomCard,
+    roomCard2,
     dataTableCard,
     auditTrailCard,
   },

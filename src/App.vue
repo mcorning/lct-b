@@ -4,26 +4,16 @@
       <v-row align="center" justify="start" dense>
         <v-col>
           <v-btn width="48" height="48" to="about" color="primary" text>
-            <soteria-icon color="purple" />
+            <soteria-icon />
           </v-btn>
           <a
             class="white--text"
             href="https://soteriainstitute.org/safe-in-sisters/"
             target="_blank"
             style="text-decoration: none;"
-            >Soteria Institute</a
+            >The Soteria Institute</a
           >
         </v-col>
-        <!-- <v-col cols="auto">
-          <v-img
-            alt="Enduring Net Logo"
-            class="shrink "
-            contain
-            src="@/assets/Enduring-Net-Logo-Portrait-Purple-RGB-BG.png"
-            max-height="36"
-            max-width="75"
-          />
-        </v-col> -->
 
         <v-spacer></v-spacer>
 

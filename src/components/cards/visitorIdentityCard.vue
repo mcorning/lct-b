@@ -27,10 +27,10 @@
               :items="visitors"
               item-text="visitor"
               item-value="id"
+              return-object
               label="Pick your nickname"
               :hint="hint"
               persistent-hint
-              return-object
               single-line
               autofocus
               :prepend-icon="statusIcon"

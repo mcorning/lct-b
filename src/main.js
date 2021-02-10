@@ -8,6 +8,10 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueSocketIO from "vue-socket.io";
+import SocketIO from "socket.io-client";
+const socketConnection = SocketIO("http://localhost:3003", {
+  withCredentials: false,
+});
 
 // careful reads at
 // https://socket.io/docs/v3/client-api/#io-url-options
@@ -46,7 +50,7 @@ Visitor.$fetch().then(() => {
 
   const { visitor, id, nsp } = lastVisitor ? lastVisitor : nullVisitor;
   const options = {
-    query: { visitor: visitor, id: id, nsp: nsp },
+    auth: { visitor: visitor, id: id, nsp: nsp },
   };
   console.log("url:", url);
   console.log("options:", options);
@@ -60,8 +64,8 @@ Visitor.$fetch().then(() => {
   Vue.use(
     new VueSocketIO({
       debug: false,
-      connection: url,
-      options: options,
+      connection: socketConnection,
+      // options: options,
       autoConnect: false,
     })
   );

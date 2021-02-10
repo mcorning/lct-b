@@ -1,9 +1,16 @@
 {
   "name": "lct-b",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.02.04.18.00",
+  "description": "Local Contact Tracing using RedisGraph",
+  "author": "Soteria Institute",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcorning/lct-b.git"
+  },
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "run on 3000": "npm run serve -- --port 3000",
+    "serve": "vue-cli-service serve ",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
