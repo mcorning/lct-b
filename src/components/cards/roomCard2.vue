@@ -310,7 +310,9 @@ export default {
     save() {
       this.hasSaved = true;
       // this is where we send a Cypher query to RedisGraph
-      const q = `MERGE (:visitor{ name: '${this.nickName}'})-[r:visited{visitedOn:'${this.visitedOn}'}]->(:space{ name: '${this.space}' })`;
+      const q = `MERGE (v:visitor{ name: '${this.nickName}'})
+ MERGE (s:space{ name: '${this.space}' })
+ MERGE (v)-[r:visited{visitedOn:'${this.visitedOn}'}]->(s)`;
       console.log(q);
       this.exposeEventPromise("addVisit", q).then((results) =>
         console.log("addVisit response:", results)
