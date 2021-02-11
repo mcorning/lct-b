@@ -38,20 +38,11 @@
         <v-icon :color="getIconColor(item.type)">mdi-{{ item.type }}</v-icon>
       </template>
     </v-data-table>
-    <div class="text-center">
-      How are we doing on the Visiter experience?
-      <v-rating
-        v-model="rating"
-        background-color="primary lighten-3"
-        color="primary"
-        large
-      ></v-rating>
-    </div>
   </v-card>
 </template>
 
 <script>
-import helpers from '@/mixins/helpers.js';
+import helpers from "@/mixins/helpers.js";
 
 export default {
   props: {
@@ -61,24 +52,24 @@ export default {
   },
   data() {
     return {
-      search: '',
-      visitFormat: 'HH:mm on ddd, MMM DD',
+      search: "",
+      visitFormat: "HH:mm on ddd, MMM DD",
 
       rating: 3,
 
       logHeaders: [
-        { text: 'Message', value: 'message' },
-        { text: 'Type', value: 'type' },
-        { text: 'Sent  ', value: 'sentTime' },
+        { text: "Message", value: "message" },
+        { text: "Type", value: "type" },
+        { text: "Sent  ", value: "sentTime" },
       ],
     };
   },
   methods: {
     getTextColor(type) {
-      return type == 'alert' ? 'red--text' : '';
+      return type == "alert" ? "red--text" : "";
     },
     getIconColor(type) {
-      return type == 'alert' ? 'red' : 'gray';
+      return type == "alert" ? "red" : "gray";
     },
     visitedDate(date) {
       return helpers.visitedDate(date);

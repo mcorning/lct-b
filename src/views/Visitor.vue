@@ -66,33 +66,49 @@
         <v-col>
           <!-- LCT-B does not interact with Rooms on the node Server.  -->
           <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
-          <roomCard2 ref="roomSelect" />
+          <roomCard2 ref="roomSelect" :nickName="enabled.visitor.visitor" />
         </v-col>
       </v-row>
+      <v-card class="overflow-hidden" color="primary lighten-4" dark>
+        <v-card-title>Your Logs</v-card-title>
 
-      <v-expansion-panels
-        v-if="messages.length"
-        v-model="panelState"
-        multiple
-        popout
-      >
-        <v-expansion-panel>
-          <v-expansion-panel-header color="secondary lighten-3" ref="visits">
-            Visits
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <dataTableCard :roomName="roomName" :log="log" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header color="secondary lighten-3">
-            Audit Trail
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <auditTrailCard :cons="cons" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+        <v-expansion-panels
+          v-if="messages.length"
+          v-model="panelState"
+          multiple
+          popout
+        >
+          <v-expansion-panel>
+            <v-expansion-panel-header
+              color="primary lighten-5"
+              dark
+              ref="visits"
+            >
+              Visits
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <dataTableCard :roomName="roomName" :log="log" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header color="primary lighten-5" dark>
+              Audit Trail
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <auditTrailCard :cons="cons" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <div class="text-center">
+          How are we doing on the Visitor experience?
+          <v-rating
+            v-model="rating"
+            background-color="primary lighten-1"
+            color="primary"
+            large
+          ></v-rating>
+        </div>
+      </v-card>
     </v-container>
   </div>
 </template>
