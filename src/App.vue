@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dense dark>
-      <v-row align="center" justify="start" dense>
+      <v-row align="center" justify="space-between" dense>
         <v-col>
           <v-btn width="48" height="48" to="about" color="primary" text>
             <soteria-icon />
@@ -11,15 +11,16 @@
             href="https://soteriainstitute.org/safe-in-sisters/"
             target="_blank"
             style="text-decoration: none;"
-            >The Soteria Institute</a
+            ><small>Soteria Institute</small></a
           >
         </v-col>
 
-        <v-spacer></v-spacer>
-
         <v-col cols="auto"
-          ><v-card-title>Local Contact Tracing</v-card-title></v-col
-        >
+          ><v-card-title class="d-sm-none">LCT</v-card-title>
+          <v-card-title class="d-sm-inline d-none">
+            Local Contact Tracing</v-card-title
+          >
+        </v-col>
       </v-row>
     </v-app-bar>
     <v-snackbar

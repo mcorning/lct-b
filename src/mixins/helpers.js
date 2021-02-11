@@ -98,7 +98,7 @@ export default {
       return test;
     },
 
-    visitedDate(date) {
+    formatVisitedDate(date) {
       let x = moment(new Date(date)).format(this.visitFormat);
       return x;
     },

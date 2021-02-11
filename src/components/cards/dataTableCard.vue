@@ -5,7 +5,7 @@
         <v-row align="center" justify="space-between" dense>
           <v-col cols="6">
             <span
-              >{{ daysBack == 0 ? 'Today' : 'All' }} {{ entered }} visits
+              >{{ daysBack == 0 ? "Today" : "All" }} {{ entered }} visits
             </span></v-col
           >
           <v-col cols="6">
@@ -75,15 +75,15 @@
 <script>
 // import moment from 'moment';
 
-import helpers from '@/mixins/helpers.js';
+import helpers from "@/mixins/helpers.js";
 
-import Message from '@/models/Message';
+import Message from "@/models/Message";
 
 export default {
   props: {
     roomName: {
       type: String,
-      default: '',
+      default: "",
     },
     log: { type: Function },
   },
@@ -100,19 +100,18 @@ export default {
       const self = this;
 
       let allVisits = this.messages.filter((v) =>
-        helpers.isBetween(v.sentTime, this.daysBack)
+        this.isBetween(v.sentTime, this.daysBack)
       );
       if (this.daysBack == 0) {
         if (self.roomName) {
           let roomVisits = this.messages.filter(
             (v) =>
-              self.roomName == v.room &&
-              helpers.isToday(v.sentTime, this.daysBack)
+              self.roomName == v.room && this.isToday(v.sentTime, this.daysBack)
           );
           return roomVisits;
         } else {
           let roomVisits = this.messages.filter((v) =>
-            helpers.isToday(v.sentTime, this.daysBack)
+            this.isToday(v.sentTime, this.daysBack)
           );
           return roomVisits;
         }
@@ -121,53 +120,53 @@ export default {
     },
 
     entered() {
-      return this.visits.filter((v) => v.message == 'Entered').length;
+      return this.visits.filter((v) => v.message == "Entered").length;
     },
 
     departed() {
-      return this.visits.filter((v) => v.message == 'Departed').length;
+      return this.visits.filter((v) => v.message == "Departed").length;
     },
   },
 
   data: () => ({
-    search: '',
+    search: "",
     daysBack: 14,
-    today: 'YYYY-MM-DD',
-    visitFormat: 'HH:mm:ss on ddd, MMM DD',
+    today: "YYYY-MM-DD",
+    visitFormat: "HH:mm:ss on ddd, MMM DD",
 
     loaded: false,
     messageHeaders: [
-      { text: 'Sent  ', value: 'sentTime' },
-      { text: 'Room', value: 'room' },
-      { text: 'Message', value: 'message' },
-      { text: 'Visitor', value: 'visitor' },
-      { text: 'Delete', value: 'action' },
+      { text: "Sent  ", value: "sentTime" },
+      { text: "Room", value: "room" },
+      { text: "Message", value: "message" },
+      { text: "Visitor", value: "visitor" },
+      { text: "Delete", value: "action" },
     ],
   }),
   methods: {
     getIcon(message) {
       switch (message.toLowerCase()) {
-        case 'alerted':
-          return 'mdi-alert';
-        case 'warned by':
-          return 'mdi-account-alert';
-        case 'opened':
-        case 'entered':
-          return 'mdi-door-open';
+        case "alerted":
+          return "mdi-alert";
+        case "warned by":
+          return "mdi-account-alert";
+        case "opened":
+        case "entered":
+          return "mdi-door-open";
         default:
-          return 'mdi-door-closed';
+          return "mdi-door-closed";
       }
     },
     getColor(message) {
       switch (message.toLowerCase()) {
-        case 'alerted':
-          return 'error';
-        case 'warned by':
-          return 'warning';
-        case 'entered':
-          return 'primary';
+        case "alerted":
+          return "error";
+        case "warned by":
+          return "warning";
+        case "entered":
+          return "primary";
         default:
-          return 'secondary';
+          return "secondary";
       }
     },
 
@@ -187,9 +186,13 @@ export default {
     },
 
     visitedDate(date) {
-      return helpers.visitedDate(date);
+      // calling the helpers' method
+      return this.formatVisitedDate(date);
     },
   },
+
+  mixins: [helpers],
+
   async mounted() {
     await Message.$fetch();
     this.loaded = true;
