@@ -1,30 +1,26 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dense dark>
-      <v-row align="center" justify="end" dense>
-        <!-- <v-col cols="auto">
-          <v-btn width="48" height="48" to="about" color="primary" text></v-btn>
-          <soteria-icon color="purple" />
+      <v-row align="center" justify="space-between" dense>
+        <v-col>
+          <v-btn width="48" height="48" to="about" color="primary" text>
+            <soteria-icon />
+          </v-btn>
+          <a
+            class="white--text"
+            href="https://soteriainstitute.org/safe-in-sisters/"
+            target="_blank"
+            style="text-decoration: none;"
+            ><small>Soteria Institute</small></a
+          >
         </v-col>
-        <v-col cols="auto">
-          <v-img contain src="/public/img/icons/Soteria_ID_120x120.jpg" />
-        </v-col> -->
-        <v-col cols="auto">
-          <v-img
-            alt="Enduring Net Logo"
-            class="shrink "
-            contain
-            src="@/assets/Enduring-Net-Logo-Portrait-Purple-RGB-BG.png"
-            max-height="36"
-            max-width="75"
-          />
-        </v-col>
-
-        <v-spacer></v-spacer>
 
         <v-col cols="auto"
-          ><v-card-title>Local Contact Tracing</v-card-title></v-col
-        >
+          ><v-card-title class="d-sm-none">LCT</v-card-title>
+          <v-card-title class="d-sm-inline d-none">
+            Local Contact Tracing</v-card-title
+          >
+        </v-col>
       </v-row>
     </v-app-bar>
     <v-snackbar

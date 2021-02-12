@@ -7,13 +7,23 @@
         <!-- <v-row>
         <v-col> -->
         <v-select
+          v-model="categorySelected"
+          :disabled="!checkedOut"
+          :items="categories"
+          label="Categories"
+          hint="We group public spaces by these categories."
+          persistent-hint
+          single-line
+          @change="onChangeCategory"
+        ></v-select>
+        <v-select
           v-model="roomSelected"
           :disabled="!checkedOut"
-          :items="openRooms"
+          :items="filteredSpaces"
           item-text="room"
           item-value="id"
           :label="roomSelectedLabel"
-          hint="Admins control this Room list. Room owners open and close."
+          hint="Admins control this list of public spaces."
           persistent-hint
           return-object
           single-line
@@ -23,7 +33,7 @@
     </v-card>
     <v-card v-if="showEntryRoomCard">
       <v-card-title
-        >Log {{ checkedOut ? 'into' : 'out of' }}
+        >Log {{ checkedOut ? "into" : "out of" }}
         {{ roomSelected.room }}</v-card-title
       >
 
@@ -55,14 +65,15 @@
           </v-col>
 
           <v-spacer></v-spacer>
-          <v-col cols="6">
+          <!-- <v-col cols="6">
             <v-text-field
               label="Occupancy"
               readonly
               :value="occupancy"
             ></v-text-field>
-          </v-col> </v-row
-      ></v-card-text>
+          </v-col>  -->
+        </v-row></v-card-text
+      >
     </v-card>
 
     <v-divider ref="login"></v-divider>
@@ -73,7 +84,8 @@
 // import helpers from '@/mixins/helpers.js';
 
 // const { printJson } = helpers;
-import * as easings from 'vuetify/es5/services/goto/easing-patterns';
+import * as easings from "vuetify/es5/services/goto/easing-patterns";
+import { data } from "@/assets/data/sistersBusiness.json";
 
 export default {
   props: {
@@ -82,56 +94,71 @@ export default {
   },
 
   computed: {
+    categories() {
+      return data.map((v) => v.NAME);
+    },
+
+    spaces() {
+      return data.map((v) => {
+        return { room: v.ID, id: v.CODE, category: v.NAME };
+      });
+    },
+    spacesCount() {
+      return data.length;
+    },
+
     activeFab() {
       if (this.checkedOut) {
         return {
-          color: 'success',
-          icon: 'mdi-account-plus',
-          tip: 'Enter Room',
+          color: "success",
+          icon: "mdi-account-plus",
+          tip: "Enter Room",
         };
       } else {
         return {
-          color: 'warning',
-          icon: 'mdi-account-minus',
-          tip: 'Leave Room',
+          color: "warning",
+          icon: "mdi-account-minus",
+          tip: "Leave Room",
         };
       }
     },
     subTitle() {
-      let text = 'Currently, there ';
+      let text = "Currently, there ";
       const ct = this.openRooms.length;
       switch (ct) {
         case 0:
-          text += 'are 0';
+          text += "are 0";
           break;
         case 1:
-          text += 'is 1';
+          text += "is 1";
           break;
         default:
           text += `are ${ct}`;
           break;
       }
-      return (text += ` open Room${ct == 1 ? '' : 's'}`);
+      return (text += ` open Room${ct == 1 ? "" : "s"}`);
     },
 
     roomSelectedLabel() {
-      return 'Pick your Room';
+      return "Pick your Room";
     },
     btnType() {
-      return this.checkedOut ? 'mdi-account-plus' : 'mdi-account-minus';
+      return this.checkedOut ? "mdi-account-plus" : "mdi-account-minus";
     },
   },
 
   data() {
     return {
-      easing: 'easeInOutCubic',
+      filteredSpaces: [],
+      categorySelected: "",
+      easing: "easeInOutCubic",
       easings: Object.keys(easings),
 
       showEntryRoomCard: false,
 
       openRooms: [],
       checkedOut: true,
-      roomSelected: { room: '', id: '' },
+      roomSelected: { room: "", id: "" },
     };
   },
 
@@ -141,7 +168,7 @@ export default {
       this.availableRooms = rooms;
       this.log(
         `There are ${this.availableRooms.length} Available Rooms`,
-        'Event: availableRoomsExposed'
+        "Event: availableRoomsExposed"
       );
     },
     openRoomsExposed(rooms) {
@@ -155,6 +182,12 @@ export default {
   },
 
   methods: {
+    onChangeCategory() {
+      this.filteredSpaces = this.spaces.filter(
+        (v) => v.category == this.categorySelected
+      );
+    },
+
     onChangeRoom() {
       this.showEntryRoomCard = true;
       if (this.$refs.login) {
@@ -164,7 +197,7 @@ export default {
           easing: this.easing,
         });
       }
-      this.$emit('changeRoom', this.roomSelected);
+      this.$emit("changeRoom", this.roomSelected);
     },
 
     exposeEventPromise(event) {
@@ -178,12 +211,17 @@ export default {
 
     onCheckInOut() {
       this.checkedOut = !this.checkedOut;
-      this.$emit('act', this.checkedOut);
+      this.$emit("act", this.checkedOut);
     },
   },
 
   watch: {},
 
-  async mounted() {},
+  async mounted() {
+    const vm = this;
+    vm.spaceMap = this.spaces.map((v) => {
+      return { room: v.ID, id: v.CODE };
+    });
+  },
 };
 </script>

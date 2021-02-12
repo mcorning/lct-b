@@ -6,8 +6,8 @@
         >Currently, you're
         {{
           $socket.connected
-            ? "connected. Pick an open Room below."
-            : "disconnected. "
+            ? "connected. Log your visit to a public space below."
+            : "disconnected. Ask your admin to check the server."
         }}
       </v-card-subtitle>
       <v-card-text>
@@ -27,10 +27,10 @@
               :items="visitors"
               item-text="visitor"
               item-value="id"
+              return-object
               label="Pick your nickname"
               :hint="hint"
               persistent-hint
-              return-object
               single-line
               autofocus
               :prepend-icon="statusIcon"

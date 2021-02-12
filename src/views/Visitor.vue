@@ -5,7 +5,6 @@
     </v-overlay>
 
     <diaryCard />
-
     <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
     <v-snackbar
       v-model="snackBar"
@@ -41,53 +40,80 @@
       </v-card>
     </v-dialog>
 
-    <v-container fluid>
-      <v-row dense justify="space-between" class="child-flex">
-        <v-col
-          ><visitorIdentityCard
-            :log="log"
-            :entered="entered"
-            @visitor="onVisitorReady($event)"
-            @warned="onWarned($event)"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col>
-          <roomCard
-            ref="roomSelect"
-            :occupancy="occupancy"
-            :log="log"
-            @changeRoom="onChangeRoom($event)"
-            @act="onAct($event)"
-        /></v-col>
-      </v-row>
-
-      <v-expansion-panels
-        v-if="messages.length"
-        v-model="panelState"
-        multiple
-        popout
-      >
-        <v-expansion-panel>
-          <v-expansion-panel-header color="secondary lighten-3" ref="visits">
-            Visits
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <dataTableCard :roomName="roomName" :log="log" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header color="secondary lighten-3">
-            Audit Trail
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <auditTrailCard :cons="cons" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-container>
+    <!-- <v-container fluid> -->
+    <v-row justify="space-between" class="child-flex" no-gutters>
+      <v-col
+        ><visitorIdentityCard
+          :log="log"
+          :entered="entered"
+          @visitor="onVisitorReady($event)"
+          @warned="onWarned($event)"
+        />
+      </v-col>
+    </v-row>
+    <v-row justify="space-between" class="child-flex" no-gutters>
+      <v-col>
+        <!-- LCT-B does not interact with Rooms on the node Server.  -->
+        <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
+        <roomCard2
+          ref="roomSelect"
+          :nickName="enabled.visitor.visitor"
+          :favorites="favorites"
+          @selectedSpace="onSelectedSpace"
+        />
+      </v-col>
+    </v-row>
+    <v-row justify="space-between" class="child-flex" no-gutters>
+      <v-col>
+        <v-card class="overflow-hidden" color="primary lighten-4" dark>
+          <v-card-title>Your Logs</v-card-title>
+          <v-expansion-panels
+            v-if="messages.length"
+            v-model="panelState"
+            multiple
+            popout
+          >
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                color="primary lighten-5"
+                dark
+                ref="visits"
+              >
+                Visits
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <dataTableCard :roomName="roomName" :log="log" />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header color="primary lighten-5" dark>
+                Audit Trail
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <auditTrailCard :cons="cons" />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row justify="space-between" class="child-flex" no-gutters>
+      <v-col>
+        <v-card class="overflow-hidden" color="primary lighten-1" dark>
+          <v-card-subtitle class="text-center">
+            How are we doing on the Visitor experience?</v-card-subtitle
+          >
+          <v-rating
+            v-model="rating"
+            background-color="primary lighten-2"
+            color="primary"
+            large
+            class="text-center"
+          ></v-rating>
+        </v-card>
+      </v-col>
+    </v-row>
+    <!-- </v-container> -->
   </div>
 </template>
 
@@ -106,7 +132,8 @@ import Visitor from "@/models/Visitor";
 
 import diaryCard from "@/components/cards/diaryCard";
 import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
-import roomCard from "@/components/cards/roomCard";
+// import roomCard from "@/components/cards/roomCard";
+import roomCard2 from "@/components/cards/roomCard2";
 // import roomIdentityCard from '@/components/cards/roomIdentityCard';
 // import roomEntryCard from '@/components/cards/roomEntryCard';
 import dataTableCard from "@/components/cards/dataTableCard";
@@ -135,11 +162,21 @@ export default {
     visitorIdentityCard,
     // roomIdentityCard,
     // roomEntryCard,
-    roomCard,
+    // roomCard,
+    roomCard2,
     dataTableCard,
     auditTrailCard,
   },
   computed: {
+    favorites() {
+      const favs = Message.query()
+        .orderBy("sentTime")
+        .get()
+        .map((v) => v.room);
+      const favSet = new Set(favs);
+      return [...favSet];
+    },
+
     showDetails() {
       return this.messages.length;
     },
@@ -475,9 +512,23 @@ See similar comments in the Room.vue notifyRoom event handler as it tries to dea
       );
     },
 
+    // old LCT-A handler
     onChangeRoom(selectedRoom) {
       console.log("Selected Room:", selectedRoom.room, selectedRoom.id);
       this.enabled.room = selectedRoom;
+    },
+
+    // LCT-B
+    onSelectedSpace(selectedSpace) {
+      console.log("Selected Space:", selectedSpace.room, selectedSpace.id);
+      this.enabled.room = selectedSpace;
+      let msg = {
+        visitor: this.enabled.visitor,
+        room: this.enabled.room.room,
+        message: "Entered",
+        sentTime: new Date().toISOString(),
+      };
+      this.messages = msg;
     },
 
     onVisitorReady(visitor) {
