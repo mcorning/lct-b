@@ -1,5 +1,4 @@
 import { Model } from "@vuex-orm/core";
-import helpers from "@/mixins/helpers.js";
 
 export default class State extends Model {
   static entity = "state";
@@ -63,7 +62,7 @@ export default class State extends Model {
   }
 
   static async handleAlert(val) {
-    console.log("STATE: warning now:", helpers.pringJson(val));
+    console.log("STATE: warning now:", JSON.stringify(val, null, 3));
     let p = await this.$update({
       data: {
         id: 0,

@@ -163,6 +163,7 @@ export default {
     favorites: {
       type: Array,
     },
+    log: { type: Function },
   },
   computed: {
     selectedFavorite() {
@@ -242,8 +243,8 @@ export default {
  MERGE (s:space{ name: '${this.selectedSpace}' })
  MERGE (v)-[r:visited{visitedOn:'${this.visitedOn}'}]->(s)`;
       console.log(q);
-      this.exposeEventPromise("addVisit", q).then((results) => {
-        console.log("addVisit response:", results);
+      this.exposeEventPromise("logVisit", q).then((results) => {
+        this.log(results, "ACK: logVisit");
         this.$emit("selectedSpace", { room: this.selectedSpace, id: "" });
       });
     },
