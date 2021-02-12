@@ -433,7 +433,6 @@ export default {
   async mounted() {
     await Visitor.$fetch();
     this.selectedVisitor = this.visitors[0];
-
     this.onVisitorSelected();
     console.group("Step 1: mounted()");
     console.log(highlight("First query:", this.printQuery()));
