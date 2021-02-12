@@ -45,6 +45,7 @@
           dense
           :items-per-page="15"
           class="elevation-1"
+          dark
         >
           <template v-slot:item.sentTime="{ item }">
             {{ visitedDate(item.sentTime) }}
@@ -132,7 +133,7 @@ export default {
     search: "",
     daysBack: 14,
     today: "YYYY-MM-DD",
-    visitFormat: "HH:mm:ss on ddd, MMM DD",
+    visitFormat: "HH:mm ddd, MMM DD",
 
     loaded: false,
     messageHeaders: [

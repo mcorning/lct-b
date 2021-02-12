@@ -126,15 +126,8 @@ export default {
       return allvisitors;
     },
     visitor() {
-      let v = Visitor.find(this.selectedVisitor?.id) || "";
+      let v = Visitor.find(this.selectedVisitor?.id) || this.visitors[0] || "";
       return v;
-    },
-    defaultVisitor() {
-      if (this.selectedVisitor.id) {
-        let v = Visitor.find(this.selectedVisitor?.id)?.visitor || "";
-        return v;
-      }
-      return "";
     },
 
     noVisitors() {
@@ -387,10 +380,7 @@ export default {
     onVisitorSelected(caller) {
       try {
         this.reconnected = false;
-        if (
-          !this.selectedVisitor.id ||
-          this.getQuery().id == this.selectedVisitor.id
-        ) {
+        if (!this.selectedVisitor.id && !this.visitors.length) {
           return;
         }
 
@@ -442,7 +432,9 @@ export default {
 
   async mounted() {
     await Visitor.$fetch();
+    this.selectedVisitor = this.visitors[0];
 
+    this.onVisitorSelected();
     console.group("Step 1: mounted()");
     console.log(highlight("First query:", this.printQuery()));
     console.groupEnd();

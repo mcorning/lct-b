@@ -4,8 +4,6 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <diaryCard />
-    <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
     <v-snackbar
       v-model="snackBar"
       :timeout="4000"
@@ -20,6 +18,7 @@
         </v-btn>
       </template>
     </v-snackbar>
+
     <v-dialog v-model="dialog" max-width="360">
       <v-card dark>
         <v-card-title class="headline red--text">
@@ -40,8 +39,11 @@
       </v-card>
     </v-dialog>
 
-    <!-- <v-container fluid> -->
-    <v-row justify="space-between" class="child-flex" no-gutters>
+    <diaryCard />
+    <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
+
+    <!-- visitorIdentityCard -->
+    <v-row no-gutters>
       <v-col
         ><visitorIdentityCard
           :log="log"
@@ -51,7 +53,9 @@
         />
       </v-col>
     </v-row>
-    <v-row justify="space-between" class="child-flex" no-gutters>
+
+    <!-- roomCard2 -->
+    <v-row no-gutters>
       <v-col>
         <!-- LCT-B does not interact with Rooms on the node Server.  -->
         <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
@@ -63,9 +67,11 @@
         />
       </v-col>
     </v-row>
-    <v-row justify="space-between" class="child-flex" no-gutters>
+
+    <!-- Your Logs -->
+    <v-row no-gutters>
       <v-col>
-        <v-card class="overflow-hidden" color="primary lighten-4" dark>
+        <v-card class="overflow-hidden">
           <v-card-title>Your Logs</v-card-title>
           <v-expansion-panels
             v-if="messages.length"
@@ -97,9 +103,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row justify="space-between" class="child-flex" no-gutters>
+
+    <!-- likert -->
+    <v-row no-gutters>
       <v-col>
-        <v-card class="overflow-hidden" color="primary lighten-1" dark>
+        <v-card class="overflow-hidden">
           <v-card-subtitle class="text-center">
             How are we doing on the Visitor experience?</v-card-subtitle
           >
@@ -113,7 +121,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- </v-container> -->
   </div>
 </template>
 
@@ -300,7 +307,7 @@ export default {
     cons: [],
     rooms: [],
     socketServerOnline: false,
-    visitFormat: "HH:mm on ddd, MMM DD",
+    visitFormat: "HH:mm ddd, MMM DD",
     checkedOut: true,
   }),
 
@@ -709,10 +716,6 @@ See similar comments in the Room.vue notifyRoom event handler as it tries to dea
     selectedRoom(newVal, oldVal) {
       console.log(newVal, oldVal);
     },
-  },
-
-  async created() {
-    console.log("Visitor.vue created");
   },
 
   async mounted() {
