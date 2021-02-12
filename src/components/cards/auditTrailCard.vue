@@ -72,9 +72,12 @@ export default {
       return type == "alert" ? "red" : "gray";
     },
     visitedDate(date) {
-      return helpers.visitedDate(date);
+      return this.formatVisitedDate(date);
     },
   },
+
+  mixins: [helpers],
+
   mounted() {},
 };
 </script>

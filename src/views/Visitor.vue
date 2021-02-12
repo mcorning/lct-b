@@ -61,6 +61,7 @@
         <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
         <roomCard2
           ref="roomSelect"
+          :log="log"
           :nickName="enabled.visitor.visitor"
           :favorites="favorites"
           @selectedSpace="onSelectedSpace"
