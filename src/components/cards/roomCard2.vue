@@ -1,6 +1,6 @@
 <template>
   <v-card class="overflow-hidden" color="primary lighten-2" dark>
-    <v-card-title>Local Contact Tracing Public Spaces</v-card-title>
+    <v-card-title>LCT Public Spaces</v-card-title>
     <v-card-subtitle
       >Community: {{ nsp }} Visitor: {{ nickName }}</v-card-subtitle
     >

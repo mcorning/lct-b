@@ -5,7 +5,8 @@ export default {
     return {
       daysBack: 14,
       today: "YYYY-MM-DD",
-      visitFormat: "HH:mm:ss:SSS on ddd, MMM DD",
+      // visitFormat: "HH:mm:ss:SSS on ddd, MMM DD",
+      visitFormat: "HH:mm ddd, MMM DD",
       defaultQuery: {
         visitor: "",
         id: "",
