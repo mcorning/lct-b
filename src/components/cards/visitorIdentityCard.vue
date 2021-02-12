@@ -16,7 +16,7 @@
       </v-card-subtitle>
       <v-card-text>
         <v-row align="center">
-          <v-col>
+          <v-col cols="8">
             <v-text-field
               v-if="newVisitor"
               label="Enter your nickname:"
@@ -384,7 +384,7 @@ export default {
     onVisitorSelected(caller) {
       try {
         this.reconnected = false;
-        if (!this.selectedVisitor.id && !this.visitors.length) {
+        if (!this.selectedVisitor?.id && !this.visitors.length) {
           return;
         }
 
