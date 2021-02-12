@@ -7,7 +7,11 @@
         {{
           $socket.connected
             ? "connected. Log your visit to a public space below."
-            : "disconnected. Ask your admin to check the server."
+            : `disconnected. ${
+                selectedVisitor.id
+                  ? "Ask your admin to check the server."
+                  : "Be sure to login to the server"
+              }`
         }}
       </v-card-subtitle>
       <v-card-text>
