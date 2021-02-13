@@ -1,6 +1,6 @@
 {
   "name": "lct-b",
-  "version": "0.02.12.20",
+  "version": "0.02.13.00",
   "description": "Local Contact Tracing using RedisGraph",
   "author": "Soteria Institute",
   "license": "MIT",
