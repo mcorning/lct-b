@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-title>Connect Local Contact Tracing</v-card-title>
-      <v-card-subtitle
+      <!-- <v-card-subtitle
         >Currently, you're
         {{
           $socket.connected
@@ -13,10 +13,10 @@
                   : "Be sure to login to the server"
               }`
         }}
-      </v-card-subtitle>
+      </v-card-subtitle> -->
       <v-card-text>
-        <v-row align="center">
-          <v-col>
+        <v-row align="center" no-gutters>
+          <v-col cols="8">
             <v-text-field
               v-if="newVisitor"
               label="Enter your nickname:"
@@ -74,19 +74,19 @@
         </v-row>
         <v-row align="center">
           <v-col v-if="$socket.connected" class="text-center ">
-            <v-tooltip bottom>
+            <!--  <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <span v-bind="attrs" v-on="on" class="text-center">
-                  <warnRoomCard
+                 <warnRoomCard
                     :visitor="selectedVisitor"
                     :log="log"
                     @warned="onWarned($event)"
                     @connect="onVisitorSelected()"
-                  />
+                  /> 
                 </span>
               </template>
               <span>Warn Rooms</span>
-            </v-tooltip>
+            </v-tooltip>-->
           </v-col>
         </v-row>
       </v-card-text>
@@ -99,7 +99,7 @@ import base64id from "base64id";
 
 import Visitor from "@/models/Visitor";
 
-import warnRoomCard from "@/components/cards/warnRoomCard";
+// import warnRoomCard from "@/components/cards/warnRoomCard";
 
 import helpers from "@/mixins/helpers.js";
 
@@ -121,7 +121,7 @@ export default {
     },
   },
   components: {
-    warnRoomCard,
+    // warnRoomCard,
   },
   computed: {
     // source for Visitor dropdown
@@ -384,7 +384,7 @@ export default {
     onVisitorSelected(caller) {
       try {
         this.reconnected = false;
-        if (!this.selectedVisitor.id && !this.visitors.length) {
+        if (!this.selectedVisitor?.id && !this.visitors.length) {
           return;
         }
 

@@ -1,12 +1,8 @@
 <template>
   <v-card class="overflow-hidden" color="primary lighten-2" dark>
-    <v-card-title>LCT Public Spaces</v-card-title>
-    <v-card-subtitle
-      >Community: {{ nsp }} Visitor: {{ nickName }}</v-card-subtitle
-    >
     <v-dialog v-model="alert" max-width="450">
       <v-card dark class="white--text">
-        <v-card-title>Are you sure you want to update the server?</v-card-title>
+        <h3 class="ma-5 pt-3">Are you sure you want to update the server?</h3>
         <v-card-text class="white--text"
           >You cannot put this toothpaste back in the tube...</v-card-text
         >
@@ -18,128 +14,165 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-tooltip left>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            :disabled="!selectedSpace || !nickName"
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            @click="save"
-          >
-            Log visit:
-            {{ selectedSpace }}
-          </v-btn>
-        </template>
-        <span>Send your visit to the server</span>
-      </v-tooltip>
-    </v-card-actions>
 
-    <v-expansion-panels v-model="panelState" multiple popout dark>
-      <v-expansion-panel>
-        <v-expansion-panel-header color="primary lighten-3" dark>
-          Your Favorite Spaces
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-list flat dense>
-            <v-list-item-group v-model="favorite">
-              <v-list-item v-for="(item, i) in favorites" :key="i">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-
-      <!-- Local Spaces -->
-      <v-expansion-panel>
-        <v-expansion-panel-header color="primary lighten-3" dark>
-          Your Local Spaces
-        </v-expansion-panel-header>
-
-        <!-- Categories -->
-        <v-expansion-panel-content>
-          <v-card-text>
-            <v-select
-              v-model="categorySelected"
-              :items="categoryLabels"
-              item-text="label"
-              item-value="NAME"
-              return-object
-              label="Category"
-              hint="We group public spaces by these categories."
-              persistent-hint
-              @change="onChangeCategory"
-            ></v-select>
-            <v-autocomplete
-              v-model="selectedSpace"
-              :items="filteredSpaces"
-              :filter="customFilter"
-              color="white"
-              item-text="room"
-              label="Room"
-              clearable
-            ></v-autocomplete>
-          </v-card-text>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-
-      <!-- Ad Hoc visits -->
-      <v-expansion-panel>
-        <v-expansion-panel-header color="primary lighten-3" dark>
-          Your Spontaneous Spaces
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-card-text>
-            <v-card-subtitle
-              >Spontaneous spaces are unstructured gatherings. Examples of
-              deliberate public gatherings include rallies, raves, and group
-              hikes. Examples of accidental gatherings are waiting for a bus,
-              train, or plane. A common example includes sharing a ride in a
-              vehicle.</v-card-subtitle
-            >
-            <v-bottom-sheet v-model="sheet" inset>
+    <v-card color="secondary" class="black--text" dark>
+      <v-card-title
+        ><span class="d-sm-none">LCT Public Spaces</span>
+        <span class="d-sm-inline d-none"
+          >Local Contact Tracing Public Spaces</span
+        >
+      </v-card-title>
+      <v-card-subtitle>
+        <v-row no-gutters
+          ><v-col>Community: {{ nsp }}</v-col>
+          <v-col class="text-center">
+            <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on" block>
-                  Add such a gathering...
-                </v-btn>
+                <span v-bind="attrs" v-on="on" class="text-center">
+                  <warnRoomCard
+                    :visitor="selectedVisitor"
+                    :log="log"
+                    @warned="onWarned($event)"
+                    @connect="onVisitorSelected()"
+                  />
+                </span>
               </template>
+              <span>Warn Rooms</span>
+            </v-tooltip></v-col
+          >
+          <v-col class="text-right">Visitor: {{ nickName }}</v-col></v-row
+        >
+      </v-card-subtitle>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              :disabled="!selectedSpace || !nickName"
+              color="primary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              @click="save"
+            >
+              Log visit:
+              {{ selectedSpace }}
+            </v-btn>
+          </template>
+          <span>Send your visit to the server</span>
+        </v-tooltip>
+      </v-card-actions>
 
-              <v-sheet class="text-center" height="200px">
-                <v-card-text>
-                  <v-text-field
-                    v-model="selectedSpace"
-                    label="Identify the gathering"
-                    hint="Use a name others in the gathering would use"
-                    persistent-hint
-                    clearable
-                  ></v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    class="mt-6"
-                    text
-                    color="error"
-                    @click="sheet = !sheet"
+      <v-tabs background-color="primary " color="secondary" center>
+        <!-- Favorites  -->
+        <v-tab>
+          <v-icon left>
+            mdi-heart
+          </v-icon>
+          <span class="d-sm-inline d-none">Favorites</span>
+        </v-tab>
+
+        <!-- Spaces  -->
+        <v-tab>
+          <v-icon left>
+            mdi-home
+          </v-icon>
+          <span class="d-sm-inline d-none">Spaces</span>
+        </v-tab>
+
+        <!-- Spontaneous  -->
+        <v-tab>
+          <v-icon left>
+            mdi-account-group
+          </v-icon>
+
+          <span class="d-sm-inline d-none">Gatherings</span>
+        </v-tab>
+
+        <!-- Favorites List -->
+        <v-tab-item>
+          <v-card tile>
+            <v-card-text>
+              <v-list dense shaped max-width="300">
+                <v-subheader>Spaces you visited recently:</v-subheader>
+                <v-divider></v-divider>
+                <v-list-item-group v-model="favorite" color="primary">
+                  <v-list-item v-for="(item, i) in favorites" :key="i">
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item"></v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+
+        <!-- Spaces form -->
+        <v-tab-item>
+          <v-card>
+            <v-card-text>
+              Your local public spaces:
+              <v-row>
+                <v-col cols="auto">
+                  <v-chip-group
+                    v-model="selectedCategory"
+                    mandatory
+                    active-class="primary--text"
                   >
-                    Done
-                  </v-btn>
-                  <v-btn class="mt-6" text color="error" @click="cancel">
-                    Cancel
-                  </v-btn>
-                </v-card-actions>
-              </v-sheet>
-            </v-bottom-sheet>
-          </v-card-text>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+                    <v-chip filter>
+                      <v-icon>mdi-store</v-icon>
+                    </v-chip>
+                    <v-chip filter>
+                      <v-icon>mdi-silverware</v-icon>
+                    </v-chip>
 
+                    <v-chip filter>
+                      <v-icon>mdi-bed</v-icon>
+                    </v-chip>
+                    <v-chip filter>
+                      <v-icon>mdi-theater</v-icon>
+                    </v-chip>
+                  </v-chip-group>
+                </v-col>
+                <v-col cols="auto">
+                  <v-autocomplete
+                    v-model="selectedSpace"
+                    :items="filteredSpaces"
+                    :filter="customFilter"
+                    color="white"
+                    item-text="room"
+                    label="Room"
+                    clearable
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+
+        <!-- Spontaneous Gatherings prompt-->
+        <v-tab-item>
+          <v-card>
+            <v-card-text>
+              <v-text-field
+                v-model="selectedSpace"
+                label="Identify the gathering"
+                hint="Use a name others in the gathering would use"
+                persistent-hint
+                clearable
+                autofocus
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn class="mt-6" text color="error" @click="sheet = !sheet">
+                Done
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-tab-item>
+      </v-tabs>
+    </v-card>
     <v-divider></v-divider>
 
     <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>
@@ -150,6 +183,8 @@
 </template>
 
 <script>
+import warnRoomCard from "@/components/cards/warnRoomCard";
+
 import Room from "@/models/Room";
 
 import { data } from "@/assets/data/sistersBusiness.json";
@@ -165,13 +200,16 @@ export default {
     },
     log: { type: Function },
   },
+  components: {
+    warnRoomCard,
+  },
   computed: {
     selectedFavorite() {
       return this.favorites[this.favorite];
     },
 
     categories() {
-      return data.map((v) => v.NAME);
+      return [...new Set(data.map((v) => v.NAME))];
     },
 
     spaces() {
@@ -183,6 +221,8 @@ export default {
 
   data() {
     return {
+      selectedCategory: [],
+      usePanels: false,
       alert: false,
       visitedOn: new Date().toLocaleDateString("en-US"),
       panelState: [],
@@ -210,12 +250,6 @@ export default {
       this.selectedSpace = "";
     },
 
-    onChangeCategory() {
-      this.filteredSpaces = this.spaces.filter(
-        (v) => v.category == this.categorySelected.NAME
-      );
-    },
-
     customFilter(item, queryText) {
       const textOne = item.room.toLowerCase();
       const searchText = queryText.toLowerCase();
@@ -232,7 +266,6 @@ export default {
       });
     },
     save() {
-      this.hasSaved = true;
       this.alert = true;
     },
 
@@ -242,10 +275,12 @@ export default {
       const q = `MERGE (v:visitor{ name: '${this.nickName}'})
  MERGE (s:space{ name: '${this.selectedSpace}' })
  MERGE (v)-[r:visited{visitedOn:'${this.visitedOn}'}]->(s)`;
-      console.log(q);
+      this.log(q, "RedisGraph: add visit query");
+
       this.exposeEventPromise("logVisit", q).then((results) => {
         this.log(results, "ACK: logVisit");
         this.$emit("selectedSpace", { room: this.selectedSpace, id: "" });
+        this.hasSaved = true;
       });
     },
   },
@@ -253,6 +288,14 @@ export default {
   watch: {
     favorite() {
       this.selectedSpace = this.selectedFavorite;
+    },
+
+    selectedCategory() {
+      this.categorySelected = this.categories[this.selectedCategory];
+      this.filteredSpaces = this.spaces.filter(
+        (v) => v.category == this.categorySelected
+      );
+      this.selectedSpace = "";
     },
   },
   async mounted() {
