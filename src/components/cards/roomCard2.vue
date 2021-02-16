@@ -29,12 +29,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <span v-bind="attrs" v-on="on" class="text-center">
-                  <warnRoomCard
-                    :visitor="selectedVisitor"
+                  <warnRoomCard />
+                  <!-- update these props before using them in roomCard2
+                      :visitor="selectedVisitor"
                     :log="log"
                     @warned="onWarned($event)"
-                    @connect="onVisitorSelected()"
-                  />
+                    @connect="onVisitorSelected()" -->
                 </span>
               </template>
               <span>Warn Rooms</span>

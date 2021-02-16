@@ -9,9 +9,6 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueSocketIO from "vue-socket.io";
 import SocketIO from "socket.io-client";
-const socketConnection = SocketIO("http://localhost:3003", {
-  withCredentials: false,
-});
 
 // careful reads at
 // https://socket.io/docs/v3/client-api/#io-url-options
@@ -40,7 +37,9 @@ import Visitor from "@/models/Visitor";
 const nullVisitor = { visitor: "", id: "", nsp: "" };
 
 let url = process.env.NODE_ENV == "development" ? devUrl : prodUrl;
-
+const socketConnection = SocketIO(url, {
+  withCredentials: false,
+});
 Visitor.$fetch().then(() => {
   console.log("---------------main.js-----------------------");
 
