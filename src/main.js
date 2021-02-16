@@ -37,9 +37,14 @@ import Visitor from "@/models/Visitor";
 const nullVisitor = { visitor: "", id: "", nsp: "" };
 
 let url = process.env.NODE_ENV == "development" ? devUrl : prodUrl;
-const socketConnection = SocketIO(url, {
+// url not necessary with heroku
+const socketConnection = SocketIO({
   withCredentials: false,
 });
+// used w/o heroku
+// const socketConnection = SocketIO(url, {
+//   withCredentials: false,
+// });
 Visitor.$fetch().then(() => {
   console.log("---------------main.js-----------------------");
 
