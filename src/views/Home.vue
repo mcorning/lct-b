@@ -7,6 +7,7 @@
         ><a
           href="https://htmlpreview.github.io/?https://github.com/mcorning/prototyping/blob/master/out/Specification.html"
           target="_blank"
+          rel="noopener"
           >LCT Specification</a
         ></v-card-text
       >
@@ -21,12 +22,14 @@
         <a
           href="https://trinsic.id/simplifying-ssi-based-solutions-to-focus-on-adoption/"
           target="_blank"
+          rel="noopener"
           >Trinsic Newsletter</a
         >
         or the
         <a
           href="https://us10.campaign-archive.com/?u=1e21ad08ed0422a5dac0b8eed&id=6eea8bc679"
           target="_blank"
+          rel="noopener"
           >CCI Newsletter</a
         >, thanks for stopping by.</v-card-text
       >
@@ -42,10 +45,16 @@
       <v-card-text>
         COVID-19 kills an American every 80 seconds. Time is not our ally. But
         the
-        <a href="http://soteria.id" target="_blank"> Soteria Institute</a> is.
+        <a href="http://soteria.id" target="_blank" rel="noopener">
+          Soteria Institute</a
+        >
+        is.
       </v-card-text>
       <v-card-text>
-        <a href="https://soteriainstitute.org/donatesoteria" target="_blank"
+        <a
+          href="https://soteriainstitute.org/donatesoteria"
+          target="_blank"
+          rel="noopener"
           >Your donations</a
         >
         (financial or in kind) will help us bring this weapon online sooner to
@@ -54,7 +63,7 @@
       <v-card-text>
         So please, join our growing group of world-wide partners in this fight
         for our lives:
-        <a href="https://enduringnet.org/" target="_blank">
+        <a href="https://enduringnet.org/" target="_blank" rel="noopener">
           <v-img
             alt="Enduring Net Logo"
             class="shrink mr-2"
@@ -63,7 +72,7 @@
           />
         </a>
 
-        <a href="https://secours.io/" target="_blank">
+        <a href="https://secours.io/" target="_blank" rel="noopener">
           <v-img
             alt="Secours Logo"
             class="shrink mr-2"
@@ -80,7 +89,7 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: 'Home',
+  name: "Home",
   components: {},
 };
 </script>
