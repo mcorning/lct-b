@@ -42,32 +42,36 @@
     <diaryCard />
     <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
 
-    <!-- visitorIdentityCard -->
-    <v-row no-gutters>
-      <v-col
-        ><visitorIdentityCard
-          :log="log"
-          :entered="entered"
-          @visitor="onVisitorReady($event)"
-          @warned="onWarned($event)"
-        />
-      </v-col>
-    </v-row>
+    <navCard />
 
-    <!-- roomCard2 -->
-    <v-row no-gutters>
-      <v-col>
-        <!-- LCT-B does not interact with Rooms on the node Server.  -->
-        <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
-        <roomCard2
-          ref="roomSelect"
-          :log="log"
-          :nickName="enabled.visitor.visitor"
-          :favorites="favorites"
-          @selectedSpace="onSelectedSpace"
-        />
-      </v-col>
-    </v-row>
+    <div v-if="false">
+      <!-- visitorIdentityCard -->
+      <v-row no-gutters>
+        <v-col
+          ><visitorIdentityCard
+            :log="log"
+            :entered="entered"
+            @visitor="onVisitorReady($event)"
+            @warned="onWarned($event)"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- roomCard2 -->
+      <v-row no-gutters>
+        <v-col>
+          <!-- LCT-B does not interact with Rooms on the node Server.  -->
+          <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
+          <roomCard2
+            ref="roomSelect"
+            :log="log"
+            :nickName="enabled.visitor.visitor"
+            :favorites="favorites"
+            @selectedSpace="onSelectedSpace"
+          />
+        </v-col>
+      </v-row>
+    </div>
 
     <!-- Your Logs -->
     <v-row no-gutters>
@@ -139,6 +143,7 @@ import State from "@/models/State";
 import Visitor from "@/models/Visitor";
 
 import diaryCard from "@/components/cards/diaryCard";
+import navCard from "@/components/cards/navCard";
 import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
 // import roomCard from "@/components/cards/roomCard";
 import roomCard2 from "@/components/cards/roomCard2";
@@ -167,6 +172,7 @@ export default {
   name: "LctVisitor",
   components: {
     diaryCard,
+    navCard,
     visitorIdentityCard,
     // roomIdentityCard,
     // roomEntryCard,
