@@ -10,6 +10,7 @@
             class="white--text"
             href="https://soteriainstitute.org/safe-in-sisters/"
             target="_blank"
+            rel="noopener"
             style="text-decoration: none;"
             ><small>Soteria Institute</small></a
           >
