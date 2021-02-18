@@ -22,7 +22,7 @@
           >Local Contact Tracing Public Spaces</span
         >
       </v-card-title>
-      <v-card-subtitle>
+      <v-card-text>
         <v-row no-gutters
           ><v-col>Community: {{ nsp }}</v-col>
           <v-col class="text-center">
@@ -42,7 +42,7 @@
           >
           <v-col class="text-right">Visitor: {{ nickName }}</v-col></v-row
         >
-      </v-card-subtitle>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-tooltip left>
@@ -179,6 +179,25 @@
       You have entered
       {{ selectedSpace }}
     </v-snackbar>
+    <v-toolbar> </v-toolbar>
+    <v-bottom-navigation
+      :value="value"
+      color="secondary"
+      background-color="primary"
+    >
+      <v-btn>
+        <span>Favorites</span>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Nearby</span>
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Getherings</span>
+        <v-icon>mdi-account-group</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-card>
 </template>
 
@@ -221,6 +240,7 @@ export default {
 
   data() {
     return {
+      value: 0,
       selectedCategory: [],
       usePanels: false,
       alert: false,

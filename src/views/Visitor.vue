@@ -42,13 +42,13 @@
     <diaryCard />
     <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
 
-    <navCard />
+    <mapCard v-if="false" />
 
-    <div v-if="false">
+    <div>
       <!-- visitorIdentityCard -->
       <v-row no-gutters>
         <v-col
-          ><visitorIdentityCard
+          ><visitorIdentityCard2
             :log="log"
             :entered="entered"
             @visitor="onVisitorReady($event)"
@@ -143,8 +143,8 @@ import State from "@/models/State";
 import Visitor from "@/models/Visitor";
 
 import diaryCard from "@/components/cards/diaryCard";
-import navCard from "@/components/cards/navCard";
-import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
+import mapCard from "@/components/cards/mapCard";
+import visitorIdentityCard2 from "@/components/cards/visitorIdentityCard2";
 // import roomCard from "@/components/cards/roomCard";
 import roomCard2 from "@/components/cards/roomCard2";
 // import roomIdentityCard from '@/components/cards/roomIdentityCard';
@@ -172,8 +172,8 @@ export default {
   name: "LctVisitor",
   components: {
     diaryCard,
-    navCard,
-    visitorIdentityCard,
+    mapCard,
+    visitorIdentityCard2,
     // roomIdentityCard,
     // roomEntryCard,
     // roomCard,
