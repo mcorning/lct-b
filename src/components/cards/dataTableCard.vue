@@ -1,74 +1,68 @@
 <template>
   <v-card>
     <v-card-text v-if="loaded">
-      <v-list dense>
-        <v-row align="center" justify="space-between" dense>
-          <v-col cols="6">
-            <span
-              >{{ daysBack == 0 ? "Today" : "All" }} {{ entered }} visits
-            </span></v-col
-          >
-          <v-col cols="6">
-            <div class="text-center">
-              <v-checkbox
-                :value="!allVisits"
-                label="See today's visits"
-                @change="toggleVisits"
-              ></v-checkbox></div
-          ></v-col>
-          <v-col cols="12" v-if="allVisits && messages.length">
-            <div class="text-center">
-              <v-btn color="warning" block @click="deleteAllMessages"
-                >Delete all visits</v-btn
-              >
-            </div></v-col
-          >
-        </v-row>
-        <v-card-title>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search Messages"
-            single-line
-            hide-details
-            @click="daysBack = 14"
-          ></v-text-field>
-        </v-card-title>
-        <v-data-table
-          :search="search"
-          :headers="messageHeaders"
-          :items="visits"
-          multi-sort
-          :sort-by="['sentTime', 'room', 'visitor']"
-          :sort-desc="[true, true, true]"
-          item-key="id"
-          dense
-          :items-per-page="15"
-          class="elevation-1"
-          dark
+      <v-row align="center" justify="space-between" no-gutters dense>
+        <v-col cols="6">
+          <span
+            >{{ daysBack == 0 ? "Today" : "All" }} {{ entered }} visits
+          </span></v-col
         >
-          <template v-slot:item.sentTime="{ item }">
-            {{ visitedDate(item.sentTime) }}
-          </template>
+        <v-col cols="6">
+          <v-checkbox
+            class="text-center"
+            :value="!allVisits"
+            label="See today's visits"
+            @change="toggleVisits"
+          ></v-checkbox
+        ></v-col>
+      </v-row>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search Messages"
+        single-line
+        hide-details
+        @click="daysBack = 14"
+      ></v-text-field>
+      <v-data-table
+        :search="search"
+        :headers="messageHeaders"
+        :items="visits"
+        multi-sort
+        :sort-by="['sentTime', 'room', 'visitor']"
+        :sort-desc="[true, true, true]"
+        item-key="id"
+        dense
+        :items-per-page="15"
+        class="elevation-1"
+        dark
+      >
+        <template v-slot:item.sentTime="{ item }">
+          {{ visitedDate(item.sentTime) }}
+        </template>
 
-          <template v-slot:item.message="{ item }">
-            <div class="text-center">
-              <v-chip class="ma-2" :color="getColor(item.message)" dark>
-                <v-avatar left>
-                  <v-icon>{{ getIcon(item.message) }}</v-icon>
-                </v-avatar>
-                {{ item.message }}
-              </v-chip>
-            </div>
-          </template>
+        <template v-slot:item.message="{ item }">
+          <div class="text-center">
+            <v-chip class="ma-2" :color="getColor(item.message)" dark>
+              <v-avatar left>
+                <v-icon>{{ getIcon(item.message) }}</v-icon>
+              </v-avatar>
+              {{ item.message }}
+            </v-chip>
+          </div>
+        </template>
 
-          <template v-slot:item.action="{ item }">
-            <v-icon @click="deleteMessage(item.id)">
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-list>
+        <template v-slot:item.action="{ item }">
+          <v-icon @click="deleteMessage(item.id)">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+      <div v-if="allVisits && messages.length" class="text-center">
+        <v-btn color="warning" block @click="deleteAllMessages"
+          >Delete all visits</v-btn
+        >
+      </div>
     </v-card-text>
   </v-card>
 </template>

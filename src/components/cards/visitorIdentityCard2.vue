@@ -1,5 +1,5 @@
 <template>
-  <v-card height="350px">
+  <div>
     <v-navigation-drawer absolute permanent right expand-on-hover>
       <template v-slot:prepend>
         <v-list-item two-line>
@@ -39,6 +39,7 @@
       </v-list>
     </v-navigation-drawer>
 
+    <!-- <v-card height="350px"> -->
     <v-snackbar
       :value="!done"
       :timeout="timeout"
@@ -89,7 +90,8 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </v-card>
+    <!-- </v-card> -->
+  </div>
 </template>
 
 <script>

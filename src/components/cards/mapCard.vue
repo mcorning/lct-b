@@ -27,7 +27,6 @@
         class="shrink mr-2"
         contain
         src="@/assets/campus.jpg"
-        height="680"
       />
     </v-row>
   </v-card>
