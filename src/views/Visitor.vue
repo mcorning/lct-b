@@ -42,70 +42,20 @@
     <diaryCard />
     <!-- note use of v-model (because this snackbar will come and go, as necessary) -->
 
-    <navCard />
-
-    <div v-if="false">
-      <!-- visitorIdentityCard -->
-      <v-row no-gutters>
-        <v-col
-          ><visitorIdentityCard
-            :log="log"
-            :entered="entered"
-            @visitor="onVisitorReady($event)"
-            @warned="onWarned($event)"
-          />
-        </v-col>
-      </v-row>
-
-      <!-- roomCard2 -->
-      <v-row no-gutters>
-        <v-col>
-          <!-- LCT-B does not interact with Rooms on the node Server.  -->
-          <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
-          <roomCard2
-            ref="roomSelect"
-            :log="log"
-            :nickName="enabled.visitor.visitor"
-            :favorites="favorites"
-            @selectedSpace="onSelectedSpace"
-          />
-        </v-col>
-      </v-row>
-    </div>
-
-    <!-- Your Logs -->
+    <!-- roomCard -->
     <v-row no-gutters>
       <v-col>
-        <v-card class="overflow-hidden">
-          <v-card-title>Your Logs</v-card-title>
-          <v-expansion-panels
-            v-if="messages.length"
-            v-model="panelState"
-            multiple
-            popout
-          >
-            <v-expansion-panel>
-              <v-expansion-panel-header
-                color="primary lighten-5"
-                dark
-                ref="visits"
-              >
-                Visits
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <dataTableCard :roomName="roomName" :log="log" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-header color="primary lighten-5" dark>
-                Audit Trail
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <auditTrailCard :cons="cons" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
+        <!-- LCT-B does not interact with Rooms on the node Server.  -->
+        <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
+        <roomCard2
+          ref="roomSelect"
+          :log="log"
+          :nickName="enabled.visitor.visitor"
+          :favorites="favorites"
+          @spaceSelected="onSpaceSelected"
+          :messages="messages"
+          :roomName="roomName"
+        />
       </v-col>
     </v-row>
 
@@ -113,7 +63,7 @@
     <v-row no-gutters>
       <v-col>
         <v-card class="overflow-hidden">
-          <v-card-subtitle class="text-center">
+          <v-card-subtitle class="text-center pa-0">
             How are we doing on the Visitor experience?</v-card-subtitle
           >
           <v-rating
@@ -143,14 +93,10 @@ import State from "@/models/State";
 import Visitor from "@/models/Visitor";
 
 import diaryCard from "@/components/cards/diaryCard";
-import navCard from "@/components/cards/navCard";
-import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
+
 // import roomCard from "@/components/cards/roomCard";
 import roomCard2 from "@/components/cards/roomCard2";
 // import roomIdentityCard from '@/components/cards/roomIdentityCard';
-// import roomEntryCard from '@/components/cards/roomEntryCard';
-import dataTableCard from "@/components/cards/dataTableCard";
-import auditTrailCard from "@/components/cards/auditTrailCard";
 
 import clc from "cli-color";
 // const success = clc.green.bold;
@@ -172,14 +118,8 @@ export default {
   name: "LctVisitor",
   components: {
     diaryCard,
-    navCard,
-    visitorIdentityCard,
-    // roomIdentityCard,
-    // roomEntryCard,
-    // roomCard,
+
     roomCard2,
-    dataTableCard,
-    auditTrailCard,
   },
   computed: {
     favorites() {
@@ -286,8 +226,6 @@ export default {
     entered: false,
     easing: "easeInOutCubic",
     easings: Object.keys(easings),
-
-    panelState: [],
 
     overlay: true,
     snackBar: true,
@@ -480,7 +418,6 @@ See similar comments in the Room.vue notifyRoom event handler as it tries to dea
     onAct(checkedOut) {
       // set the prop for visitorIdentityCard (disable the dropdown if entering a Room)
       this.entered = !checkedOut;
-      this.panelState = [0]; // open only the 0th element of expansion-panels
 
       let msg = {
         visitor: this.enabled.visitor,
@@ -533,7 +470,7 @@ See similar comments in the Room.vue notifyRoom event handler as it tries to dea
     },
 
     // LCT-B
-    onSelectedSpace(selectedSpace) {
+    onSpaceSelected(selectedSpace) {
       console.log("Selected Space:", selectedSpace.room, selectedSpace.id);
       this.enabled.room = selectedSpace;
       let msg = {

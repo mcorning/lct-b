@@ -1,96 +1,96 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title>Connect Local Contact Tracing</v-card-title>
-      <!-- <v-card-subtitle
-        >Currently, you're
-        {{
-          $socket.connected
-            ? "connected. Log your visit to a public space below."
-            : `disconnected. ${
-                selectedVisitor.id
-                  ? "Ask your admin to check the server."
-                  : "Be sure to login to the server"
-              }`
-        }}
-      </v-card-subtitle> -->
-      <v-card-text>
-        <v-row align="center" no-gutters>
-          <v-col cols="8">
-            <v-text-field
-              v-if="newVisitor"
-              label="Enter your nickname:"
-              hint="How do you want to be seen?"
-              persistent-hint
-              clearable
-              @change="onUpdateVisitor($event)"
-            />
-            <v-select
-              v-else
-              v-model="selectedVisitor"
-              :items="visitors"
-              item-text="visitor"
-              item-value="id"
-              return-object
-              label="Pick your nickname"
-              :hint="hint"
-              persistent-hint
-              single-line
-              autofocus
-              :prepend-icon="statusIcon"
-              :disabled="entered"
-            >
-            </v-select>
-          </v-col>
+    <v-navigation-drawer absolute permanent right expand-on-hover>
+      <template v-slot:prepend>
+        <v-list-item two-line>
+          <v-list-item-avatar>
+            <img src="https://randomuser.me/api/portraits/women/81.jpg" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-row aligg="end">
+              <v-col cols="3">
+                <v-icon>{{ statusIcon }} </v-icon>
+              </v-col>
+              <v-col>
+                <v-list-item-title>{{
+                  selectedVisitor.visitor
+                }}</v-list-item-title>
+              </v-col>
+            </v-row>
+            {{ selectedVisitor.id }}
+          </v-list-item-content>
+        </v-list-item>
+      </template>
 
-          <v-col>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-bind="attrs" v-on="on">
-                  <v-btn fab dark small color="green" @click="onAddVisitor()">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </span>
-              </template>
-              <span>Add Visitor</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-bind="attrs" v-on="on">
-                  <v-btn
-                    fab
-                    dark
-                    small
-                    color="orange"
-                    @click="onDeleteVisitor()"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </span>
-              </template>
-              <span>Delete Visitor</span>
-            </v-tooltip>
-          </v-col>
-        </v-row>
-        <v-row align="center">
-          <v-col v-if="$socket.connected" class="text-center ">
-            <!--  <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-bind="attrs" v-on="on" class="text-center">
-                 <warnRoomCard
-                    :visitor="selectedVisitor"
-                    :log="log"
-                    @warned="onWarned($event)"
-                    @connect="onVisitorSelected()"
-                  /> 
-                </span>
-              </template>
-              <span>Warn Rooms</span>
-            </v-tooltip>-->
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item-group v-model="act" color="primary">
+          <v-list-item v-for="item in actions" :key="item.title">
+            <v-list-item-icon>
+              <v-icon @click="item.action">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
+    <!-- <v-card height="350px"> -->
+    <v-snackbar
+      :value="!done"
+      :timeout="timeout"
+      vertical
+      top
+      color="primary"
+      dark
+    >
+      <v-text-field
+        v-if="addVisitorAction"
+        label="Enter your nickname:"
+        hint="How do you want to be seen?"
+        persistent-hint
+        clearable
+        @change="onUpdateVisitor($event)"
+      />
+      <!-- select for either changeVisitorAction or deleteVisitorAction -->
+      <v-select
+        v-else
+        v-model="selectedVisitor"
+        :items="visitors"
+        item-text="visitor"
+        item-value="id"
+        return-object
+        label="Pick your nickname"
+        :hint="hint"
+        persistent-hint
+        single-line
+        autofocus
+        :prepend-icon="statusIcon"
+        :disabled="entered"
+      >
+      </v-select>
+      <template v-slot:action="{ attrs }">
+        <v-btn v-if="addVisitorAction" color="white" text @click="onAddVisitor">
+          Add
+        </v-btn>
+        <v-btn
+          v-if="deleteVisitorAction"
+          color="white"
+          text
+          @click="onDeleteVisitor"
+        >
+          Delete
+        </v-btn>
+        <v-btn color="white" text v-bind="attrs" @click="close">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <!-- </v-card> -->
   </div>
 </template>
 
@@ -98,8 +98,6 @@
 import base64id from "base64id";
 
 import Visitor from "@/models/Visitor";
-
-// import warnRoomCard from "@/components/cards/warnRoomCard";
 
 import helpers from "@/mixins/helpers.js";
 
@@ -120,11 +118,16 @@ export default {
       default: null,
     },
   },
-  components: {
-    // warnRoomCard,
-  },
   computed: {
-    // source for Visitor dropdown
+    changeVisitorAction() {
+      return this.selectedAction == "changeVisitorAction";
+    },
+    addVisitorAction() {
+      return this.selectedAction == "addVisitorAction";
+    },
+    deleteVisitorAction() {
+      return this.selectedAction == "deleteVisitorAction";
+    },
     visitors() {
       let allvisitors = Visitor.all();
       return allvisitors;
@@ -133,96 +136,110 @@ export default {
       let v = Visitor.find(this.selectedVisitor?.id) || this.visitors[0] || "";
       return v;
     },
-
-    noVisitors() {
-      return this.visitors.length == 0;
-    },
   },
-
   data() {
     return {
-      dialog: false,
-      deferConnection: false,
-      reconnected: false,
-      hint: "",
-      newVisitor: false,
-      mainIcon: "mdi-account-outline",
+      done: true,
+      timeout: -1,
+      act: -1,
+      selectedAction: "",
+      hint: "This nickname appears on your phone only",
       statusIcon: "mdi-lan-disconnect",
+      msg: "",
+      newVisitor: false,
       nsp: "",
       selectedVisitor: {},
+      actions: [
+        {
+          title: "Change nickname",
+          icon: "mdi-account",
+          action: "changeVisitorAction",
+        },
+        {
+          title: "Add nickname",
+          icon: "mdi-account-plus",
+          action: "addVisitorAction",
+        },
+        {
+          title: "Delete nickname",
+          icon: "mdi-account-minus",
+          action: "deleteVisitorAction",
+        },
+      ],
     };
   },
+
   sockets: {
     //#region socket.io reserved events
     connect() {
-      const { visitor, id, nsp } = this.getQuery();
+      // const { visitor, id, nsp } = this.getQuery();
 
-      console.log(this.$socket.id, visitor, id, this.$socket.query);
+      // console.log(this.$socket.id, visitor, id, this.$socket.query);
 
-      // OBX sends a socket with an ID generated on the server and copied in the query options
-      if (this.$socket.connected && !id) {
-        this.newVisitor = this.noVisitors;
-        return;
-      }
+      // // OBX sends a socket with an ID generated on the server and copied in the query options
+      // if (this.$socket.connected && !id) {
+      //   this.newVisitor = this.noVisitors;
+      //   return;
+      // }
 
-      // set the selectedVisitor object
-      if (!this.selectedVisitor.visitor) {
-        this.selectedVisitor = { visitor: visitor, id: id, nsp: nsp };
-      }
+      // // set the selectedVisitor object
+      // if (!this.selectedVisitor.visitor) {
+      //   this.selectedVisitor = { visitor: visitor, id: id, nsp: nsp };
+      // }
 
-      console.group("Step 0: connect() at", Date.now());
-      console.log(
-        highlight(
-          this.$socket.id,
-          this.$socket.connected,
-          this.printJson(this.$socket.io.opts)
-        )
-      );
+      // console.group("Step 0: connect() at", Date.now());
+      // console.log(
+      //   highlight(
+      //     this.$socket.id,
+      //     this.$socket.connected,
+      //     this.printJson(this.$socket.io.opts)
+      //   )
+      // );
 
-      if (this.reconnected) {
-        this.log("Reconnected. No need to connect(). Returning");
-        return;
-      }
+      // if (this.reconnected) {
+      //   this.log("Reconnected. No need to connect(). Returning");
+      //   return;
+      // }
 
-      console.log(`Connecting ${visitor}`);
+      // console.log(`Connecting ${visitor}`);
 
-      this.log(
-        `Server connected using Id: ${id}, Visitor: ${visitor}, and nsp ${nsp} `,
-        "visitorIdentityCard.vue"
-      );
+      // this.log(
+      //   `Server connected using Id: ${id}, Visitor: ${visitor}, and nsp ${nsp} `,
+      //   "visitorIdentityCard.vue"
+      // );
 
-      console.groupEnd();
-      console.log(" ");
+      // console.groupEnd();
+      // console.log(" ");
 
       // set icon to indicate connect() handled
       this.statusIcon = "mdi-lan-connect";
-      this.hint = id;
+      // this.hint = id;
       this.$emit("visitor", this.selectedVisitor);
     },
 
-    reconnect(reason) {
-      if (!this.getQuery()) {
-        return;
-      }
-      // this.query = this.parseParams(this.$socket.io.opts.query);
-      console.group("onReconnect");
-      console.log(
-        highlight(
-          `[${this.getNow()}] ${this.printQuery()} Recconnect ${reason}`,
-          "visitorIdentityCard.vue"
-        )
-      );
-      const msg = {
-        visitor: this.getQuery().visitor,
-        message: "Reconnected",
-        sentTime: new Date().toISOString(),
-      };
-      this.messages = msg;
-      this.log(`Reconnect ${reason}`, "visitorIdentityCard.vue");
-      console.groupEnd();
+    // reconnect(reason) {
+    //   if (!this.getQuery()) {
+    //     return;
+    //   }
+    //   // this.query = this.parseParams(this.$socket.io.opts.query);
+    //   console.group("onReconnect");
+    //   console.log(
+    //     highlight(
+    //       `[${this.getNow()}] ${this.printQuery()} Recconnect ${reason}`,
+    //       "visitorIdentityCard.vue"
+    //     )
+    //   );
+    //   const msg = {
+    //     visitor: this.getQuery().visitor,
+    //     message: "Reconnected",
+    //     sentTime: new Date().toISOString(),
+    //   };
+    //   this.messages = msg;
+    //   this.log(`Reconnect ${reason}`, "visitorIdentityCard.vue");
+    //   console.groupEnd();
 
-      this.onVisitorSelected("reconnect");
-    },
+    //   this.onVisitorSelected("reconnect");
+    // },
 
     //#region Other connection events
     disconnect(reason) {
@@ -260,6 +277,10 @@ export default {
   },
 
   methods: {
+    close() {
+      this.done = true;
+    },
+
     parseParams(querystring) {
       // parse query string
       const params = new URLSearchParams(querystring);
@@ -303,10 +324,13 @@ export default {
     },
 
     onAddVisitor() {
+      this.done = true;
+
       this.newVisitor = true;
     },
 
     onDeleteVisitor() {
+      this.done = true;
       this.selectedVisitor = null;
     },
 
@@ -430,9 +454,19 @@ export default {
 
       this.onVisitorSelected("watch");
     },
-  },
 
-  created() {},
+    act(newVal, oldVal) {
+      console.log("newVal:", newVal, "oldVal:", oldVal);
+      try {
+        const item = newVal >= 0 ? newVal : oldVal >= 0 ? oldVal : -1;
+        this.selectedAction = this.actions[item]?.action;
+        console.log(this.selectedAction);
+        this.done = false;
+      } catch (error) {
+        alert(error);
+      }
+    },
+  },
 
   async mounted() {
     await Visitor.$fetch();
