@@ -17,14 +17,14 @@ module.exports = {
     },
     start_url: "/",
   },
-  devServer: {
-    proxy: {
-      "^/api": {
-        target: "http://localhost:3003",
-        changeOrigin: true,
-      },
-    },
-  },
+  // devServer: {
+  //   proxy: {
+  //     "^/api": {
+  //       target: "http://localhost:3003",
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // },
 
-  outputDir: path.resolve(__dirname, "../socket.io.server/dist"),
+  // outputDir: path.resolve(__dirname, "../socket.io.server/dist"),
 };
