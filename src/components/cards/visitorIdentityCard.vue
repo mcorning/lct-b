@@ -4,20 +4,19 @@
       <template v-slot:prepend>
         <v-list-item two-line>
           <v-list-item-avatar>
-            <img src="https://randomuser.me/api/portraits/women/81.jpg" />
+            <img :src="avatar" />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-row aligg="end">
               <v-col cols="3">
                 <v-icon>{{ statusIcon }} </v-icon>
               </v-col>
-              <v-col>
+              <v-col class="text-bottom">
                 <v-list-item-title>{{
                   selectedVisitor.visitor
                 }}</v-list-item-title>
-              </v-col>
-            </v-row>
-            {{ selectedVisitor.id }}
+              </v-col> </v-row
+            ><small> {{ selectedVisitor.id }} </small>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -119,6 +118,10 @@ export default {
     },
   },
   computed: {
+    avatar() {
+      let randomId = Math.round(Math.random() * 100);
+      return `https://randomuser.me/api/portraits/men/${randomId}.jpg`;
+    },
     changeVisitorAction() {
       return this.selectedAction == "changeVisitorAction";
     },

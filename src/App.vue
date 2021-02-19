@@ -168,6 +168,8 @@ export default {
   //   },
   // },
 
-  async mounted() {},
+  async mounted() {
+    console.log("App.vue mounted");
+  },
 };
 </script>

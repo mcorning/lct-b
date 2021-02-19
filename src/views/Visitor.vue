@@ -47,7 +47,7 @@
       <v-col>
         <!-- LCT-B does not interact with Rooms on the node Server.  -->
         <!-- LCT-B interacts with RedisGraph server, instead (where the ID of the room is all that's necessary for the graph.). -->
-        <roomCard2
+        <roomCard
           ref="roomSelect"
           :log="log"
           :nickName="enabled.visitor.visitor"
@@ -95,7 +95,7 @@ import Visitor from "@/models/Visitor";
 import diaryCard from "@/components/cards/diaryCard";
 
 // import roomCard from "@/components/cards/roomCard";
-import roomCard2 from "@/components/cards/roomCard2";
+import roomCard from "@/components/cards/roomCard";
 // import roomIdentityCard from '@/components/cards/roomIdentityCard';
 
 import clc from "cli-color";
@@ -119,7 +119,7 @@ export default {
   components: {
     diaryCard,
 
-    roomCard2,
+    roomCard,
   },
   computed: {
     favorites() {
