@@ -39,16 +39,18 @@
           </v-list>
         </v-card-text>
       </v-card>
+
       <!-- Spaces form -->
       <v-card v-if="showSpaces" :height="ht">
         <v-card-text>
-          Your local public spaces:
+          Pick a {{ nsp }} public space category:
           <v-row>
-            <v-col cols="auto">
+            <v-col cols="12">
               <v-chip-group
                 v-model="selectedCategory"
                 mandatory
-                active-class="primary--text"
+                color="secondary"
+                dark
               >
                 <v-chip filter>
                   <v-icon>mdi-store</v-icon>
@@ -65,16 +67,19 @@
                 </v-chip>
               </v-chip-group>
             </v-col>
-            <v-col cols="auto">
-              <v-autocomplete
-                v-model="selectedSpace"
-                :items="filteredSpaces"
-                :filter="customFilter"
-                color="white"
-                item-text="room"
-                label="Room"
-                clearable
-              ></v-autocomplete>
+            <v-col cols="12">
+              <v-row no-gutters>
+                <v-col cols="12"> {{ categoryLabel }}: </v-col>
+                <v-col cols="auto">
+                  <v-autocomplete
+                    v-model="selectedSpace"
+                    :items="filteredSpaces"
+                    :filter="customFilter"
+                    item-text="room"
+                    clearable
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-card-text>
@@ -82,29 +87,23 @@
 
       <!-- Getherings from button click -->
       <v-card v-if="showGatherings" :height="ht">
+        <v-card-title>Identify the gathering</v-card-title>
         <v-card-text>
-          <v-text-field
-            v-model="selectedSpace"
-            label="Identify the gathering"
-            hint="Use a name others in the gathering would use"
-            persistent-hint
-            clearable
-            autofocus
-          ></v-text-field>
+          <v-row>
+            <v-col cols="10" md="4">
+              <v-text-field
+                v-model="selectedSpace"
+                hint="Use a name others in the gathering would use"
+                persistent-hint
+                clearable
+                autofocus
+              ></v-text-field
+            ></v-col>
+          </v-row>
         </v-card-text>
-        <v-card-actions>
-          <v-btn class="mt-6" text color="error" @click="sheet = !sheet">
-            Done
-          </v-btn>
-        </v-card-actions>
       </v-card>
 
-      <visitorIdentityCard2
-        :log="log"
-        @visitor="onVisitorReady($event)"
-        @warned="onWarned($event)"
-        height="660"
-      />
+      <visitorIdentityCard :log="log" @warned="onWarned($event)" :height="ht" />
     </v-card>
     <v-card>
       <v-tooltip left>
@@ -129,6 +128,7 @@
       :value="value"
       color="secondary"
       background-color="primary"
+      dark
     >
       <v-btn @click="show = 0">
         <span>Recent</span>
@@ -159,7 +159,7 @@
 
 <script>
 // import warnRoomCard from "@/components/cards/warnRoomCard";
-import visitorIdentityCard2 from "@/components/cards/visitorIdentityCard2";
+import visitorIdentityCard from "@/components/cards/visitorIdentityCard";
 import logsCard from "@/components/cards/logsCard";
 import mapCard from "@/components/cards/mapCard";
 
@@ -183,10 +183,14 @@ export default {
   components: {
     // warnRoomCard,
     mapCard,
-    visitorIdentityCard2,
+    visitorIdentityCard,
     logsCard,
   },
   computed: {
+    categoryLabel() {
+      const label = this.categoryLabels[this.selectedCategory]?.label;
+      return `Select a space from ${label}`;
+    },
     showFavorites() {
       return this.show == 0;
     },
@@ -227,6 +231,7 @@ export default {
 
   data() {
     return {
+      spaceLabel: "",
       show: 0,
       ht: "500px",
       value: 0,
@@ -238,7 +243,7 @@ export default {
       sheet: false,
       dialog: false,
       favorite: -1,
-      nsp: "sisters",
+      nsp: "Sisters",
       categoryLabels: [
         { NAME: "RES", label: "Food and Drink" },
         { NAME: "RETAIL", label: "Retail" },
@@ -305,6 +310,10 @@ export default {
         (v) => v.category == this.categorySelected
       );
       this.selectedSpace = "";
+
+      this.spaceLabel = `Select a space for ${
+        this.categoryLabels[this.selectedCategory].label
+      }`;
     },
   },
   async mounted() {

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-4" flat height="550px">
+  <v-card class="pa-4" flat height="5o0px">
     <v-row align="center" justify="space-around">
       <v-col cols="8" class="text-center">
         <v-text-field
