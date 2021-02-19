@@ -22,3 +22,5 @@ pnpm-debug.log*
 *.sln
 *.sw?
 src/components/basement/
+json.json
+json.js
